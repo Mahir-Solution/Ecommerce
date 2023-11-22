@@ -6,7 +6,7 @@ def counter(request):# this is a context proessor function that return dictionry
     if 'admin' in request.path:
         return {}
     else:
-        try:
+        try: 
             #cart = Cart.objects.filter(cart_id = _cart_id(request)).first()
             cart = Cart_Model.objects.get(cart_id = _cart_id(request))# we can use any line 10,11 which show same result
             if request.user.is_authenticated:

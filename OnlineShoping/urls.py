@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 from Product.views import storeview,Searchproduct,product_detail
 from Cart.views import cartview,add_cart,removeviewall,remove_item,checkout_view
 from Registration.views import register_view,login_view,logout_view,Dashboard_view,activate_view
+from order.views import place_order,payment,complete_order
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,4 +43,9 @@ urlpatterns = [
     path('dashboard/',Dashboard_view,name="dashboard"),
     path('activate/<uidb64>/<token>/',activate_view,name="activate"),
     path('checkout/',checkout_view,name="checkout"),
+    path('payments/',payment, name = "payments"),
+    path('placeorder/',place_order, name = "placeorder"),
+    path('ordercomplete/',complete_order, name = "ordercomplete"),
+    
+    
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
