@@ -1,0 +1,62 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+    
+    <!-- ========================= SECTION CONTENT ========================= -->
+    <section class="section-conten padding-y bg">
+    
+    <div class="container">
+        {%include 'message.html'%}
+        <div class="row">
+        <aside class="col-md-3">
+            <!--   SIDEBAR   -->
+            <ul class="list-group">
+                <a class="list-group-item {%if '/dashboard/' in request.path%}active{%endif%}" href="{%url 'dashboard'%}"> Dashboard </a>
+                <a class="list-group-item {%if '/myorder/' in request.path%}active{%endif%}" href="{%url 'myorder'%}"> My Order </a>
+                <!--<a class="list-group-item" href="#"> Edit Profile </a>-->
+                <a class="list-group-item {%if '/change_password/' in request.path%}active{%endif%}" href="{%url 'change_password'%}">Change Password </a>
+            </ul>
+            <br>
+            <a class="btn btn-light btn-block" href="{%url 'logout'%}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
+            <!--   SIDEBAR .//END   -->
+        </aside>
+        <main class="col-md-9">
+            <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">My Order History </strong>
+                
+            </header>
+                       
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Order #</th>
+                    <th scope="col">Billing Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Order Total</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {%for x in order%}
+                            <tr>
+                                
+                                <td>{{x.order_number}}</td>
+                                <td>{{x.first_name}} {{x.last_name}}</td>
+                                <td>{{x.phone}}</td>
+                                <td>{{x.order_total}}</td>
+                                <td>{{x.created_at}}</td>
+                            </tr>
+                  {%endfor%}
+                </tbody>
+              </table>
+            </article> <!-- order-group.// --> 
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+{%endblock content%}

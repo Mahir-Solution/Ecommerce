@@ -47,6 +47,7 @@ def place_order(request):
          data.order_total = grand_total
          data.tax = tax
          data.ip = request.META.get('REMOTE_ADDR')
+         data.is_ordered = True
          data.save()# all billing info store in order 
          
         # Generate order number
@@ -59,7 +60,7 @@ def place_order(request):
          data.order_number = order_number
          data.save()
          #print(order_number)
-         order = Order.objects.get(user_rfk =request.user , is_ordered = False, order_number = order_number )
+         order = Order.objects.get(user_rfk =request.user , is_ordered = True, order_number = order_number )
          #print(order.id,'check id by wasim abbas')
          #print(order,'wasim abbas')
          data = {
@@ -68,6 +69,7 @@ def place_order(request):
                  'tax':tax,
                  'total':total,
                  'grand_total':grand_total,
+                 
 
          }
          
@@ -107,17 +109,21 @@ def complete_order(request):
     grand_total = total+tax
     order = Order.objects.filter(user_rfk = request.user)
     
+    justname = CartItem_Model.objects.filter(registrationfk = request.user).first()# tis is used to get only one record becuase in templte i need frist name only once
+         
     data = {
         'cart_items':cart_items,
         'order':order,
         'total':total,
         'tax':tax,
         'grand_total':grand_total,
+        'justname':justname,
             
     }
+    
     # Clear cart
     CartItem_Model.objects.filter(registrationfk =request.user).delete()# this would delete all item that in cart on the base of login user
-    
+        
     return render(request,'ordercomplete.html',data)
     # in this view we manage payment later 
 

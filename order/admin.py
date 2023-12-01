@@ -12,6 +12,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['order_number', 'first_name', 'last_name', 'phone', 'email']
     list_per_page = 20
     inlines = [OrderProductInline]
+    list_editable = ['is_ordered']
 
 admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)

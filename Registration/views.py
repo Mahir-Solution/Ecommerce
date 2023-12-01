@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 
 from django.contrib.auth import authenticate,login
 import requests
+from order.models import Order,OrderProduct
 
 
 def register_view(request):
@@ -152,8 +153,45 @@ def logout_view(request):
 
 @login_required(login_url = 'login')
 def Dashboard_view(request):
-    return render(request,"danshboard.html")
+    oder = Order.objects.order_by('created_at').filter(user_rfk_id= request.user.id)
+    order_count = oder.count()
+    data = {
+           'order_count':order_count,
+    }
+    return render(request,"danshboard.html",data)
 
 def activate_view(request,uidb64,token):
     return HttpResponse('registaration ok')
+
+def myorder(request):
+    order = Order.objects.filter(user_rfk = request.user, is_ordered = True).order_by('-created_at')
+    data = {
+        'order':order
+    }
+    return render(request,"myorder.html",data)
+
+@login_required(login_url='login')
+def change_password(request):
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+
+        user = Registation.objects.get(username__exact=request.user.username)
+
+        if new_password == confirm_password:
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                user.save()
+            
+                messages.success(request, 'Password updated successfully.')
+                return redirect('change_password')
+            else:
+                messages.error(request, 'Please enter valid current password')
+                return redirect('change_password')
+        else:
+            messages.error(request, 'Password does not match!')
+            return redirect('change_password')
+    return render(request, 'change_password.html')
 # Create your views here.

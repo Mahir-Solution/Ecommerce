@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config # this is used for security purpose
 import os.path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,11 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-53bwp6&@0azdf_9za)$0%wga)ol6h74eyje6uwi6fx*79_zipu'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 #DEBUG = False
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 #ALLOWED_HOSTS = ['.vercel.app']
 ALLOWED_HOSTS = []
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'Registration',
     'users',
     'order',
+    #'admin_honeypot',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +58,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
+#the below session script automaticatlly logout after the give second bolow
+SESSION_EXPIRE_SECONDS = 3600
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'login'
+
+
 
 ROOT_URLCONF = 'OnlineShoping.urls'
 
@@ -86,13 +96,20 @@ WSGI_APPLICATION = 'OnlineShoping.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'OnlineShoping',
-        'USER': 'root',
-        'PASSWORD': 'wasi786',
-        'HOST': '127.0.0.1',  # Set the host to your database server's address
-        'PORT': '3306',           # Leave this empty for default MySQL port (3306)
-        #'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': config('DATABASE_ENGINE'),
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST'),
+        'PORT': config('DATABASE_PORT'),
+
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'OnlineShoping',
+        # 'USER': 'root',
+        # 'PASSWORD': 'wasi786',
+        # 'HOST': '127.0.0.1',  # Set the host to your database server's address
+        # 'PORT': '3306',           # Leave this empty for default MySQL port (3306)
+        # #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3', these two line is by default database sqlite
     }
 }

@@ -23,11 +23,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from Product.views import storeview,Searchproduct,product_detail
 from Cart.views import cartview,add_cart,removeviewall,remove_item,checkout_view
-from Registration.views import register_view,login_view,logout_view,Dashboard_view,activate_view
+from Registration.views import register_view,login_view,logout_view,Dashboard_view,activate_view,myorder,change_password
 from order.views import place_order,payment,complete_order
+from django.urls import include
+#from admin_honeypot import views as honeypot_views
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', include('admin_honeypot.urls')),
+    # path('admin/', honeypot_views.admin_honeypot, name='admin_honeypot'),
+   
+    path('wasi_ecommerce/', admin.site.urls),
     path('',home,name='home'),
     path('store/',storeview,name='store'),
     path('category/<slug:category_slug>/',storeview,name="product_by_category"),# here category_slug name can be any that you want same name transfer to given view
@@ -46,6 +53,9 @@ urlpatterns = [
     path('payments/',payment, name = "payments"),
     path('placeorder/',place_order, name = "placeorder"),
     path('ordercomplete/',complete_order, name = "ordercomplete"),
+    path('myorder/',myorder,name="myorder"),
+    path('change_password/',change_password,name = "change_password"),
+    
     
     
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
